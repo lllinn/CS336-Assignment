@@ -24,18 +24,19 @@ if __name__ == "__main__":
     def get_memmap(filepath: str, dtype=np.int32):
         return np.memmap(filepath, dtype=dtype, mode='r')
     train_path = r"data\TinyStoriesV2-GPT4-train.dat"
+    # 5461729, 541620865
     train_set = get_memmap(train_path)
     print(len(train_set))
-    train_dataloader = partial(get_batch, dataset=train_set, 
-                            batch_size=256, context_length=256, device="cuda")
-    x = train_dataloader()
-    print(x)
-    print(type(x))
-    x, label = train_dataloader()
-    print(sum(x[:, 1:] != label[:, :-1]))
-    model = Transformer(vocab_size=10000, d_model=512, num_heads=16,
-                        d_ff=1344, rope_theta=10000, max_seq_len=256, num_layers=4).cuda()
-    y = model(x)
+    # train_dataloader = partial(get_batch, dataset=train_set, 
+    #                         batch_size=256, context_length=256, device="cuda")
+    # x = train_dataloader()
+    # print(x)
+    # print(type(x))
+    # x, label = train_dataloader()
+    # print(sum(x[:, 1:] != label[:, :-1]))
+    # model = Transformer(vocab_size=10000, d_model=512, num_heads=16,
+    #                     d_ff=1344, rope_theta=10000, max_seq_len=256, num_layers=4).cuda()
+    # y = model(x)
     
     
     # for x, label in train_dataloader():

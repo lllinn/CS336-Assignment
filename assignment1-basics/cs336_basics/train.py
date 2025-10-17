@@ -15,6 +15,7 @@ import os
 import numpy.typing as npt
 import wandb
 from datetime import datetime
+import math
 
 
 def get_memmap(filepath: str, dtype=np.int32):
@@ -43,7 +44,6 @@ def get_val_batch(dataset: npt.NDArray, batch_size: int, context_length: int, de
     if len(batch_input) > 0:
         yield torch.concat(batch_input, dim=0), torch.concat(batch_target, dim=0)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     train_dataloader = partial(get_batch, dataset=train_set, 
                                batch_size=train_config['batch_size'], context_length=train_config['context_length'], device=device)
     val_dataloader = partial(get_val_batch, dataset=valid_set, 
-                               batch_size=train_config['batch_size'], context_length=train_config['context_length'], device=device)
+                               batch_size=train_config['batch_size'], context_length=train_config['context_length'], device=device, )
     
     # model
     model = Transformer(**config["Model"]).to(device)
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         
     # 使用tqdm上下文管理器
     pbar = tqdm(range(start_it, train_config['steps']), desc="training llm", unit="it", ncols=150)
-    test_pbar = tqdm(val_dataloader, desc="valid llm", unit="it", ncols=80, leave=False)
+    
     min_loss = float('+inf')
     
     for i in pbar:
@@ -126,10 +126,12 @@ if __name__ == "__main__":
             with torch.no_grad():
                 loss_sum = 0
                 loss_num = 0
+                test_pbar = tqdm(val_dataloader(), desc="valid llm", unit="it", ncols=80, leave=False, total=math.ceil((len(valid_set) - train_config['context_length'] - 1) / train_config['batch_size']))
                 for x, y in test_pbar:
                     y = model(x)
                     loss_sum += criterion(y, labels)
                     loss_num += 1
+                    test_pbar.update(1)
                 loss = loss_sum / loss_num
                 if loss <= min_loss:
                     min_loss = loss

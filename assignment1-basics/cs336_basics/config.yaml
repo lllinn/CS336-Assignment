@@ -45,12 +45,11 @@ Train:
 
 # valid, checkpoint
 Test:
-  save_checkpoint_period: 1000
-  valid_period: 1000
-  checkpoint: None
+  save_checkpoint_period: 20000
+  valid_period: 20000
   save_checkpoint_folder: checkpoint
-  resume: False
-  resume_checkpoint_path: None
+  resume: True
+  resume_checkpoint_path: checkpoint\last.ckpt
   
 # wandb
 WandB:
