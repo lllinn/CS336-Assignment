@@ -22,7 +22,7 @@ def get_memmap(filepath: str, dtype=np.int32):
 
 
 def get_config(filepath: str = "config.yaml"):
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding='utf-8') as f:
         config = yaml.safe_load(f)
     return config
 
@@ -67,28 +67,35 @@ if __name__ == "__main__":
     val_path = dataset_config['val_path']
     train_set = get_memmap(train_path)
     valid_set = get_memmap(val_path)
-    train_dataloader = partial(get_batch, dataset=train_path, 
-                               batch_size=train_config['batch_size'], context_length=config['context_length'], device=device)
-    val_dataloader = partial(get_val_batch, dataset=val_path, 
-                               batch_size=train_config['batch_size'], context_length=config['context_length'], device=device)
+    train_dataloader = partial(get_batch, dataset=train_set, 
+                               batch_size=train_config['batch_size'], context_length=train_config['context_length'], device=device)
+    val_dataloader = partial(get_val_batch, dataset=valid_set, 
+                               batch_size=train_config['batch_size'], context_length=train_config['context_length'], device=device)
     
     # model
     model = Transformer(**config["Model"]).to(device)
     # criterion
     criterion = cross_entropy
     # optimizer
-    optim = AdamW(params=model.parameters(), **config["Optimizer"]).to(device)
+    optim_config = config["Optimizer"]
+    optim = AdamW(params=model.parameters(), lr=float(optim_config['lr']), betas=tuple(optim_config['betas']), 
+                  weight_decay=float(optim_config['weight_decay']), eps=float(optim_config['eps']))
+    
     # scheduler
-    scheduler = partial(lr_consine_schedule, **config['Scheduler'])
+    scheduler_config = config['Scheduler']
+    scheduler = partial(lr_consine_schedule, max_learning_rate=float(scheduler_config['max_learning_rate']),
+                        min_learning_rate=float(scheduler_config['min_learning_rate']), warmup_iters=scheduler_config['warmup_iters'],
+                        consine_cycle_iters=scheduler_config['consine_cycle_iters'])
     
     
     test_config = config['Test']
+    os.makedirs(test_config['save_checkpoint_folder'], exist_ok=True)
     start_it = 0
     if test_config['resume']:
         start_it = load_checkpoint(test_config['resume_checkpoint_path'], model, optim)
         
     # 使用tqdm上下文管理器
-    pbar = tqdm(range(start_it, train_config['steps']), desc="training llm", unit="it", ncols=80)
+    pbar = tqdm(range(start_it, train_config['steps']), desc="training llm", unit="it", ncols=150)
     test_pbar = tqdm(val_dataloader, desc="valid llm", unit="it", ncols=80, leave=False)
     min_loss = float('+inf')
     
@@ -100,14 +107,14 @@ if __name__ == "__main__":
         optim.zero_grad()
         loss.backward()
         gradient_clipping(model.parameters(), **train_config['grad_clip'])
-        lr = lr_consine_schedule(i)
+        lr = scheduler(i)
         # 更新lr
         for param_group in optim.param_groups:
             param_group['lr'] = lr
         optim.step()
-        wandb.log({'step': i, 'train_loss': loss, 'lr': lr})
+        wandb.log({'step': i, 'train_loss': loss.item(), 'lr': lr})
         # 更新进度条信息
-        pbar.set_postfix(loss=loss)
+        pbar.set_postfix(loss=loss.item())
 
         if (i + 1) % test_config['save_checkpoint_period'] == 0:
             # 保存最近的模型

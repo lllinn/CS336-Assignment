@@ -54,13 +54,13 @@ class MultiHeadSelfAttentionWithRoPE(MultiHeadSelfAttention):
         qk_num = Q.shape[-2]
         mask = torch.triu(torch.ones(qk_num, qk_num), diagonal=1) == 0
         mask = mask.to(x.device)
-        multi_q = rearrange(Q, "... s (h d) -> ... h s d", h=self.num_heads)
-        multi_k = rearrange(K, "... s (h d) -> ... h s d", h=self.num_heads)
-        multi_v = rearrange(V, "... s (h d) -> ... h s d", h=self.num_heads)
+        multi_q = rearrange(Q, "... s (h d) -> h ... s d", h=self.num_heads)
+        multi_k = rearrange(K, "... s (h d) -> h ... s d", h=self.num_heads)
+        multi_v = rearrange(V, "... s (h d) -> h ... s d", h=self.num_heads)
         multi_q_rope = self.rope.forward(multi_q, token_positions)
         multi_k_rope = self.rope.forward(multi_k, token_positions)
         output = scaled_dot_product_attention(multi_q_rope, multi_k_rope, multi_v, mask)
-        output = rearrange(output,  "... h s d -> ... s (h d)")
+        output = rearrange(output,  "h ... s d -> ... s (h d)")
         return self.output_proj(output)
 
 
