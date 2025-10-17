@@ -7,12 +7,12 @@ Dataset:
 # Model config
 Model:
   vocab_size: 10000
-  d_model: 256
-  d_ff: 1024
-  num_layers: 20
-  num_heads: 8
+  d_model: 512
+  d_ff: 1344
+  num_layers: 4
+  num_heads: 16
   rope_theta: 10000
-  max_seq_len: 10000
+  max_seq_len: 256
 
 
 # Optimizer config
@@ -35,7 +35,7 @@ Scheduler:
 Train:
   steps: 20000
   batch_size: 256
-  context_length: 64
+  context_length: 256
   device: cuda:0
   grad_clip:
     max_l2_norm: 100
@@ -54,6 +54,6 @@ Test:
   
 # wandb
 WandB:
-  # project: CS336_Assignment1_Train_LLM
   project: CS336_Assignment1_Train_LLM
   name: Batch
+  notes: 初始化超参数配置

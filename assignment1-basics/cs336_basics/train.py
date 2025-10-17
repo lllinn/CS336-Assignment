@@ -59,7 +59,7 @@ if __name__ == "__main__":
     wandb_config = config['WandB']
     nowtime = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + wandb_config['name']
     wandb.login()
-    wandb.init(project=wandb_config['project'], config=config, name=nowtime)
+    wandb.init(project=wandb_config['project'], config=config, name=nowtime, notes=wandb_config['notes'])
     
     # 数据集
     dataset_config = config['Dataset']
