@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
     # 配置文件路径参数
-    parser.add_argument('--config', type=str, default="./cs336_basics/config.yaml", help="配置文件路径")
+    parser.add_argument('--config', type=str, default="CS336-Assignment/assignment1-basics/cs336_basics/config.yaml", help="配置文件路径")
     args = parser.parse_args()
     
     config = get_config(args.config)
@@ -127,7 +127,7 @@ if __name__ == "__main__":
                 loss_sum = 0
                 loss_num = 0
                 test_pbar = tqdm(val_dataloader(), desc="valid llm", unit="it", ncols=80, leave=False, total=math.ceil((len(valid_set) - train_config['context_length'] - 1) / train_config['batch_size']))
-                for x, y in test_pbar:
+                for x, labels in test_pbar:
                     y = model(x)
                     loss_sum += criterion(y, labels)
                     loss_num += 1
