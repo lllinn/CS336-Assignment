@@ -49,7 +49,7 @@ Test:
   save_checkpoint_period: 1000
   valid_period: 1000
   save_checkpoint_folder: checkpoint
-  resume: False
+  resume: True
   resume_checkpoint_path: checkpoint\last.ckpt
   
 # wandb

@@ -95,7 +95,8 @@ if __name__ == "__main__":
         start_it = load_checkpoint(test_config['resume_checkpoint_path'], model, optim)
         
     # 使用tqdm上下文管理器
-    pbar = tqdm(range(start_it, train_config['steps']), desc="training llm", unit="it", ncols=150)
+    pbar = tqdm(range(start_it, train_config['steps']), desc="training llm", unit="it", ncols=150, 
+                initial=start_it, total=train_config['steps'])
     
     min_loss = float('+inf')
     
