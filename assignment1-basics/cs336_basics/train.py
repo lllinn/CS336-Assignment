@@ -131,7 +131,7 @@ if __name__ == "__main__":
                 model.eval()
                 loss_sum = 0
                 loss_num = 0
-                test_pbar = tqdm(val_dataloader(), desc="valid llm", unit="it", ncols=80, leave=False, total=math.ceil((len(valid_set) - train_config['context_length'] - 1) / train_config['batch_size']))
+                test_pbar = tqdm(val_dataloader(), desc="valid llm", unit="it", ncols=80, leave=False, total=math.ceil((len(valid_set) - train_config['context_length']) // (train_config['batch_size'] * train_config['context_length'])))
                 for x, labels in test_pbar:
                     y = model(x)
                     loss_sum += criterion(y, labels).item()
