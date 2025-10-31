@@ -1,7 +1,7 @@
 # Dataset
 Dataset:
-  train_path: data\TinyStoriesV2-GPT4-train.dat
-  val_path: data\TinyStoriesV2-GPT4-valid.dat
+  train_path: data/TinyStoriesV2-GPT4-train.dat
+  val_path: data/TinyStoriesV2-GPT4-valid.dat
 
 
 # Model config
@@ -27,28 +27,29 @@ Optimizer:
 Scheduler:
   max_learning_rate: 1e-4
   min_learning_rate: 1e-5
-  warmup_iters: 1000
-  consine_cycle_iters: 20000
+  warmup_iters: 500
+  consine_cycle_iters: 10000
 
 
 # training
 Train:
-  steps: 20000
-  batch_size: 64
+  steps: 10000
+  batch_size: 128
   context_length: 256
   device: cuda:0
   grad_clip:
     max_l2_norm: 1.0
     eps: 1e-6
+  log_period: 100
 
 
 
 # valid, checkpoint
 Test:
   save_checkpoint_period: 1000
-  valid_period: 20000
+  valid_period: 1000
   save_checkpoint_folder: checkpoint
-  resume: True
+  resume: False
   resume_checkpoint_path: checkpoint\last.ckpt
   
 # wandb

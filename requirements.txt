@@ -1,3 +1,4 @@
+torch==2.7.1
 torchsummary==1.5.1
 nvidia-cusparselt-cu12==0.6.3
 pluggy==1.6.0
@@ -67,7 +68,6 @@ pytorch-lightning==1.9.0
 opencv-python-headless==4.11.0.86
 nvidia-nccl-cu12==2.26.2
 sentry-sdk==2.42.0
-numpy==1.26.3
 pexpect==4.9.0
 platformdirs==4.3.8
 jaxtyping==0.2.36
@@ -78,7 +78,6 @@ opencv-python==4.11.0.86
 mpmath==1.3.0
 nvidia-cudnn-cu12==9.5.1.17
 Markdown==3.8
-causal_conv1d==1.5.0.post8
 matplotlib==3.9.4
 kiwisolver==1.4.7
 nvidia-cuda-nvrtc-cu12==12.6.77
@@ -133,7 +132,6 @@ cycler==0.12.1
 protobuf==6.33.0
 fonttools==4.58.0
 MarkupSafe==2.1.5
-GDAL==3.6.2
 aiohttp==3.11.18
 nvidia-cusolver-cu12==11.7.1.2
 pandas==2.2.3
@@ -164,9 +162,7 @@ cloudpickle==3.1.1
 mkl-service==2.4.0
 attrs==25.3.0
 Werkzeug==3.1.3
-selective_scan==0.0.2
 black==25.1.0
 typing-inspection==0.4.0
 nvidia-cufile-cu12==1.11.1.6
-torch==2.7.1
 tensorboardX==2.6.4
