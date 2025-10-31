@@ -45,7 +45,7 @@ Train:
 
 # valid, checkpoint
 Test:
-  save_checkpoint_period: 20000
+  save_checkpoint_period: 1000
   valid_period: 20000
   save_checkpoint_folder: checkpoint
   resume: True
