@@ -40,13 +40,14 @@ Train:
   grad_clip:
     max_l2_norm: 1.0
     eps: 1e-6
+  log_period: 100
 
 
 
 # valid, checkpoint
 Test:
   save_checkpoint_period: 1000
-  valid_period: 10000
+  valid_period: 1000
   save_checkpoint_folder: checkpoint
   resume: False
   resume_checkpoint_path: checkpoint\last.ckpt
